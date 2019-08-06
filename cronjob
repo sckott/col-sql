@@ -1,0 +1,1 @@
+0 0 7 * *  cd col-sql && rake all && curl -fsS --retry 3 {healthcheck url} > /dev/null
