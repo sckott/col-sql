@@ -34,6 +34,7 @@ module Col
 		if is_new?
 			puts 'new data, updating'
 			fetch_col()
+			unzip_col()
 			system('sh do_col.sh')
 			to_s3()
 			clean_up()
