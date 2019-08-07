@@ -59,7 +59,15 @@ def is_new?
 	lm = DateTime.parse(res.headers['last-modified']).to_time
 
 	# file last modified
-	fm = File.stat("2019-annual.zip").mtime
+	begin
+		fm = File.stat("2019-annual.zip").mtime
+	rescue Exception => e
+		fm = nil
+	end
+
+	if fm.nil?
+		return true
+	end
 
 	# return boolean
 	return lm > fm
