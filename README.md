@@ -3,7 +3,7 @@ Catalogue of Life to SQL
 
 COL taxonomy as SQLite DB
 
-__TLDR:__ The backbone as sqlite is up at <https://s3-us-west-2.amazonaws.com/taxize-dbs/col.sqlite>
+__TLDR:__ The backbone as sqlite is up at <https://s3-us-west-2.amazonaws.com/taxize-dbs/col.zip>
 
 ## how we do
 
@@ -11,7 +11,8 @@ __TLDR:__ The backbone as sqlite is up at <https://s3-us-west-2.amazonaws.com/ta
 * unzip
 * create sqlite DB `col.sqlite`
 * import data files into sqlite DB
-* upload `col.sqlite` to Amazon S3
+* zip up sqlite file
+* upload `col.zip` to Amazon S3
 
 ## Usage
 
@@ -38,11 +39,12 @@ rake clean  # delete files not needed
 rake fetch  # get and unzip data
 rake s3     # upload database to s3
 rake sql    # create sql database
+rake zip    # create zip file
 ```
 
 `rake all` does all the things
 
-Or, you can do each separately with `rake fetch` then `rake sql`, then `rake s3`, then `rake clean`
+Or, you can do each separately with `rake fetch` then `rake sql`, then `rake zip`, then `rake s3`, then `rake clean`
 
 ### Env vars
 
@@ -50,7 +52,7 @@ Or, you can do each separately with `rake fetch` then `rake sql`, then `rake s3`
 
 ## COL sqlite file
 
-<https://taxize-dbs.s3-us-west-2.amazonaws.com/col.sqlite>
+<https://taxize-dbs.s3-us-west-2.amazonaws.com/col.zip>
 
 ## COL taxonomy citation:
 

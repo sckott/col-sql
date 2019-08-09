@@ -27,6 +27,15 @@ task :sql do
   end
 end
 
+desc "create zip file"
+task :zip do
+  begin
+    Col.zip()
+  rescue Exception => e
+    raise e
+  end
+end
+
 desc "upload database to s3"
 task :s3 do
   begin

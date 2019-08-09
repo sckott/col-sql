@@ -25,6 +25,11 @@ module Col
 		system('sh do_col.sh')
 	end
 
+	def self.zip
+		puts 'zipping sqlite db file into a zip file'
+		zip_up()
+	end
+
 	def self.s3
 		puts 'uploading SQLite database to Amazon S3'
 		to_s3()
@@ -36,6 +41,7 @@ module Col
 			fetch_col()
 			unzip_col()
 			system('sh do_col.sh')
+			zip_up()
 			to_s3()
 			clean_up()
 		else
@@ -101,15 +107,21 @@ def unzip_col
 	end
 end
 
+def zip_up
+	Zip::File.open('col.zip', Zip::File::CREATE) do |zip|
+	  zip.add("col.sqlite", "col.sqlite")
+	end
+end
+
 def to_s3
-	File.open("col.sqlite", 'rb') do |file|
-  	$s3.put_object(bucket: 'taxize-dbs', key: 'col.sqlite', body: file)
+	File.open("col.zip", 'rb') do |f|
+  		$s3.put_object(bucket: 'taxize-dbs', key: 'col.zip', body: f)
 	end
 end
 
 def clean_up
 	files_to_clean = ["taxa.txt", "reference.txt", "vernacular.txt",
 		"speciesprofile.txt", "distribution.txt", "description.txt",
-		"2019-annual.zip", "gbif.sqlite", "col.sqlite"]
+		"2019-annual.zip", "gbif.sqlite", "col.sqlite", "col.zip"]
 	files_to_clean.each { |x| File.unlink(x) unless !File.exists?(x) }
 end
