@@ -3,6 +3,7 @@ require 'faraday'
 require 'sqlite3'
 require 'date'
 require 'zip'
+require 'oga'
 
 Aws.config.update({
   region: 'us-west-2',
@@ -10,14 +11,26 @@ Aws.config.update({
 })
 $s3 = Aws::S3::Client.new
 
-$col_url = "http://www.catalogueoflife.org/DCA_Export/zip-fixed/2019-annual.zip"
+def latest_version_url
+	dca_page = 'http://www.catalogueoflife.org/DCA_Export/archive.php'
+	res = Faraday.get dca_page;
+	html = Oga.parse_html(res.body);
+	z = html.xpath('//li//a[contains(@href,"archive-complete")]');
+	w = z.map { |e| e.attr("href").text }
+	url = w.sort.last
+	return "http://www.catalogueoflife.org/DCA_Export/" + url
+end
+
+# $col_url = "http://www.catalogueoflife.org/DCA_Export/zip-fixed/2019-annual.zip"
+$col_url = latest_version_url
+$col_file = $col_url.split("/").last
 
 module Col
 
 	def self.fetch
 		puts 'fetching/unzipping data from COL servers'
-		fetch_col()
-		unzip_col()
+		fetch_col($col_file)
+		unzip_col($col_file)
 	end
 
 	def self.sql
@@ -36,14 +49,14 @@ module Col
 	end
 
 	def self.all
-		if is_new?
+		if is_new?($col_file)
 			puts 'new data, updating'
-			fetch_col()
-			unzip_col()
+			fetch_col($col_file)
+			unzip_col($col_file)
 			system('sh do_col.sh')
 			zip_up()
 			to_s3()
-			clean_up()
+			clean_up($col_file)
 		else
 			puts 'data is old, not updating'
 		end
@@ -55,7 +68,7 @@ module Col
 
 end
 
-def is_new?
+def is_new?(file)
 	# initialize Faraday connection object
 	conn = Faraday.new do |x|
 	  x.adapter Faraday.default_adapter
@@ -67,7 +80,7 @@ def is_new?
 
 	# file last modified
 	begin
-		fm = File.stat("2019-annual.zip").mtime
+		fm = File.stat(file).mtime
 	rescue Exception => e
 		fm = nil
 	end
@@ -80,8 +93,8 @@ def is_new?
 	return lm > fm
 end
 
-def fetch_col
-	if !File.exist?('2019-annual.zip')
+def fetch_col(file)
+	if !File.exist?(file)
 		# initialize Faraday connection object
 		conn = Faraday.new do |x|
 		  x.adapter Faraday.default_adapter
@@ -91,14 +104,14 @@ def fetch_col
 		res = conn.get $col_url;
 
 		# write zip file to disk
-		File.open('2019-annual.zip', 'wb') { |fp| fp.write(res.body) }
+		File.open(file, 'wb') { |fp| fp.write(res.body) }
 	else
-		puts "'2019-annual.zip' found, skipping download"
+		puts "'%s' found, skipping download" % file
 	end
 end
 
-def unzip_col
-	Zip::File.open('2019-annual.zip') do |zip_file|
+def unzip_col(file)
+	Zip::File.open(file) do |zip_file|
 	  zip_file.glob("*.txt") do |f|
 			begin
 				zip_file.extract(f, f.name) unless File.exist?(f.name)
@@ -119,9 +132,9 @@ def to_s3
 	end
 end
 
-def clean_up
+def clean_up(file)
 	files_to_clean = ["taxa.txt", "reference.txt", "vernacular.txt",
 		"speciesprofile.txt", "distribution.txt", "description.txt",
-		"2019-annual.zip", "gbif.sqlite", "col.sqlite", "col.zip"]
+		"2019-annual.zip", "gbif.sqlite", "col.sqlite", "col.zip", file]
 	files_to_clean.each { |x| File.unlink(x) unless !File.exists?(x) }
 end
