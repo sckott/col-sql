@@ -1,6 +1,8 @@
 Catalogue of Life to SQL
 ========================
 
+![build-sqlite](https://github.com/ropenscilabs/col-sql/workflows/build-sqlite/badge.svg)
+
 COL taxonomy as SQLite DB
 
 __TLDR:__ The backbone as sqlite is up at <https://s3-us-west-2.amazonaws.com/taxize-dbs/col.zip>
@@ -13,6 +15,8 @@ __TLDR:__ The backbone as sqlite is up at <https://s3-us-west-2.amazonaws.com/ta
 * import data files into sqlite DB
 * zip up sqlite file
 * upload `col.zip` to Amazon S3
+
+All above is run once per day on [Github Actions](https://github.com/ropenscilabs/col-sql/actions?query=workflow%3Abuild-sqlite)
 
 ## Usage
 
@@ -56,6 +60,6 @@ Or, you can do each separately with `rake fetch` then `rake sql`, then `rake zip
 
 ## COL taxonomy citation:
 
-> Roskov Y., Ower G., Orrell T., Nicolson D., Bailly N., Kirk P.M., Bourgoin T., DeWalt R.E., Decock W., Nieukerken E. van, Zarucchi J., Penev L., eds. (2019). Species 2000 & ITIS Catalogue of Life, 2019 Annual Checklist. Digital resource at www.catalogueoflife.org/annual-checklist/2019. Species 2000: Naturalis, Leiden, the Netherlands. ISSN 2405-884X.
+> Roskov Y.; Ower G.; Orrell T.; Nicolson D.; Bailly N.; Kirk P.M.; Bourgoin T.; DeWalt R.E.; Decock W.; Nieukerken E. van; Penev L.; eds. (2020). Species 2000 & ITIS Catalogue of Life, 2020-06-04 Beta. Digital resource at www.catalogueoflife.org/col. Species 2000: Naturalis, Leiden, the Netherlands. ISSN 2405-8858.
 
 See also <http://www.catalogueoflife.org/col/info/cite> for how to cite COL individual databases, and more.

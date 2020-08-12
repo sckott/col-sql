@@ -21,7 +21,6 @@ def latest_version_url
 	return "http://www.catalogueoflife.org/DCA_Export/" + url
 end
 
-# $col_url = "http://www.catalogueoflife.org/DCA_Export/zip-fixed/2019-annual.zip"
 $col_url = latest_version_url
 $col_file = $col_url.split("/").last
 
