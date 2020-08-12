@@ -1,4 +1,4 @@
-Catalogue of Life to SQL
+Catalogue of Life taxonomy as SQLite
 ========================
 
 ![build-sqlite](https://github.com/ropenscilabs/col-sql/workflows/build-sqlite/badge.svg)
