@@ -23,4 +23,6 @@ echo '.mode tabs\n.separator "\\t"\n.header off\n.import vernacular.txt vernacul
 echo '.mode tabs\n.separator "\\t"\n.header off\n.import taxa.txt taxa' | sqlite3 col.sqlite
 echo 'creating index'
 echo "CREATE UNIQUE INDEX id on taxa (taxonID);" | sqlite3 col.sqlite
+echo "CREATE INDEX sciname on taxa (scientificName);" | sqlite3 col.sqlite
+echo "CREATE INDEX parname on taxa (parentNameUsageID);" | sqlite3 col.sqlite
 echo "\nall done!"
