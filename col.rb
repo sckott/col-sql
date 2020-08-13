@@ -127,7 +127,7 @@ end
 
 def to_s3
 	File.open("col.zip", 'rb') do |f|
-  		$s3.put_object(bucket: 'taxize-dbs', key: 'col.zip', body: f)
+  		$s3.put_object(acl: "public-read", storage_class: "STANDARD_IA", bucket: 'taxize-dbs', key: 'col.zip', body: f)
 	end
 end
 
