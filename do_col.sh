@@ -21,7 +21,7 @@ echo '.mode tabs\n.separator "\\t"\n.header off\n.import speciesprofile.txt spec
 echo '.mode tabs\n.separator "\\t"\n.header off\n.import reference.txt reference' | sqlite3 col.sqlite
 echo '.mode tabs\n.separator "\\t"\n.header off\n.import vernacular.txt vernacular' | sqlite3 col.sqlite
 echo '.mode tabs\n.separator "\\t"\n.header off\n.import taxa.txt taxa' | sqlite3 col.sqlite
-echo 'creating index'
+echo 'creating indices'
 echo "CREATE UNIQUE INDEX id on taxa (taxonID);" | sqlite3 col.sqlite
 echo "CREATE INDEX sciname on taxa (scientificName);" | sqlite3 col.sqlite
 echo "CREATE INDEX parname on taxa (parentNameUsageID);" | sqlite3 col.sqlite
