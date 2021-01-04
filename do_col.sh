@@ -1,12 +1,12 @@
 echo "removing any quotes in data files"
-sed -i '' 's/\"//g' Taxon.tsv # mac version
-sed -i '' 's/\"//g' VernacularName.tsv # mac version
-sed -i '' 's/\"//g' SpeciesProfile.tsv # mac version
-sed -i '' 's/\"//g' Distribution.tsv # mac version
-# sed -i 's/\"//g' Taxon.tsv # linux version
-# sed -i 's/\"//g' VernacularName.tsv # linux version
-# sed -i 's/\"//g' SpeciesProfile.tsv # linux version
-# sed -i 's/\"//g' Distribution.tsv # linux version
+# sed -i '' 's/\"//g' Taxon.tsv # mac version
+# sed -i '' 's/\"//g' VernacularName.tsv # mac version
+# sed -i '' 's/\"//g' SpeciesProfile.tsv # mac version
+# sed -i '' 's/\"//g' Distribution.tsv # mac version
+sed -i 's/\"//g' Taxon.tsv # linux version
+sed -i 's/\"//g' VernacularName.tsv # linux version
+sed -i 's/\"//g' SpeciesProfile.tsv # linux version
+sed -i 's/\"//g' Distribution.tsv # linux version
 echo "quotes removed"
 echo "loading schema"
 sqlite3 col.sqlite < schema2.sql
