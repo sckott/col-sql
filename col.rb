@@ -12,13 +12,12 @@ Aws.config.update({
 $s3 = Aws::S3::Client.new
 
 def latest_version_url
-	dca_page = 'http://www.catalogueoflife.org/DCA_Export/archive.php'
+	dca_page = 'https://download.catalogueoflife.org/col/monthly/'
 	res = Faraday.get dca_page;
 	html = Oga.parse_html(res.body);
-	z = html.xpath('//li//a[contains(@href,"archive-complete")]');
-	w = z.map { |e| e.attr("href").text }
-	url = w.sort.last
-	return "http://www.catalogueoflife.org/DCA_Export/" + url
+	last_download = html.xpath('//tr//a').last.attr("href").text
+	url = dca_page + last_download
+	return url
 end
 
 $col_url = latest_version_url
@@ -111,7 +110,7 @@ end
 
 def unzip_col(file)
 	Zip::File.open(file) do |zip_file|
-	  zip_file.glob("*.txt") do |f|
+	  zip_file.glob("*.tsv") do |f|
 			begin
 				zip_file.extract(f, f.name) unless File.exist?(f.name)
 			end
@@ -132,8 +131,7 @@ def to_s3
 end
 
 def clean_up(file)
-	files_to_clean = ["taxa.txt", "reference.txt", "vernacular.txt",
-		"speciesprofile.txt", "distribution.txt", "description.txt",
-		"2019-annual.zip", "gbif.sqlite", "col.sqlite", "col.zip", file]
+	files_to_clean = ["Taxon.tsv", "VernacularName.tsv", "SpeciesProfile.tsv",
+		"Distribution.tsv", "gbif.sqlite", "col.sqlite", "col.zip", file]
 	files_to_clean.each { |x| File.unlink(x) unless !File.exists?(x) }
 end
