@@ -110,7 +110,7 @@ end
 
 def unzip_col(file)
 	Zip::File.open(file) do |zip_file|
-	  zip_file.glob("*.tsv") do |f|
+	  zip_file.glob("*.csv") do |f|
 			begin
 				zip_file.extract(f, f.name) unless File.exist?(f.name)
 			end
